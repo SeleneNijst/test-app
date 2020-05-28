@@ -21,6 +21,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/todo', 'ToDoController@todo')->name('todo');
-
+Route::get('/todo/update/{id}', 'ToDoController@updatePage')->name('updateTodo');
+Route::get('/todo/delete/{id}', 'ToDoController@delete')->name('deleteTodo');
 
 Route::post('/todo/create', 'ToDoController@create');
+Route::post('/todo/update/{id}', 'ToDoController@update');
+

@@ -31,6 +31,18 @@ class ToDoController extends Controller
         return view('todo', ['todos'=>$todos]);
     }
 
+    public function updatePage($id) {
+        $todo = Auth::user()->todos()->where('id', $id)->first();
+        if (!$todo) {
+            return redirect('/todo');
+        }
+
+        return view('todo_edit', [
+           'todo' => $todo
+        ]);
+    }
+
+
     public function create(Request $request) {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -41,9 +53,29 @@ class ToDoController extends Controller
         $todo = new ToDo();
         $todo->user_id = Auth::user()->id;
         $todo->fill($data);
-
         $todo->save();
 
+        return redirect('/todo');
+    }
+
+    public function delete($id) {
+        ToDo::find($id)->delete();
+        return redirect('/todo');
+    }
+
+    public function update(Request $request, $id) {
+        $todo = Auth::user()->todos()->where('id', $id)->first();
+        if(!$todo) {
+            return redirect('/todo');
+        }
+
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['string'],
+            'due_date' => ['date'],
+        ]);
+
+        $todo->update($data);
         return redirect('/todo');
     }
 }
